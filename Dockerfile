@@ -1,9 +1,4 @@
-FROM golang:1.6-alpine
-
-LABEL org.label-schema.vcs-url="https://github.com/wikiwi/robots-disallow" \
-      org.label-schema.vendor=wikiwi.io \
-      org.label-schema.name=robots-disallow \
-      io.wikiwi.license=MIT
+FROM golang:1.17-alpine
 
 RUN apk add --no-cache \
     git \
@@ -12,7 +7,9 @@ RUN apk add --no-cache \
 WORKDIR /go/src/app
 
 COPY . /go/src/app
-RUN go-wrapper download && \
-    go-wrapper install
+
+RUN go env -w GO111MODULE=auto
+RUN go get -v && \
+    go install
 
 ENTRYPOINT ["app"]
